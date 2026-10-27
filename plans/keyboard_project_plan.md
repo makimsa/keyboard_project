@@ -20,7 +20,6 @@ Related: [[Project Planning Conversation]] · [[eink_project_plan]]
 - Normal mode: works like a regular USB keyboard.
 - Voice mode: press a button, say a command ("close tab"), keyboard sends the shortcut (Cmd+W).
 - Speech recognition runs **on the microcontroller** (keyword spotting, fixed command list).
-- Small OLED shows the recognized command, or WPM in normal mode.
 
 ## Why this matters for grading
 - The on-device ML is what makes this an "intelligent device", not a dumb laptop interface.
@@ -29,8 +28,7 @@ Related: [[Project Planning Conversation]] · [[eink_project_plan]]
 
 ## Core vs stretch
 Decide this early and put it in the proposal.
-- **Core:** matrix + USB HID + 10-15 voice commands + OLED showing command + on-device WPM.
-- **Stretch:** system-usage (btop-style) screen fed by a laptop helper app.
+- **Core:** matrix + USB HID + 10-15 voice commands.
 - **Stretch:** more commands, custom wake word, layers/macros.
 - **Stretch:** custom PCB instead of hand-wiring.
 
@@ -82,9 +80,8 @@ Decide this early and put it in the proposal.
 - [ ] List every pin you need:
   - 12 columns + 4 rows = 16 pins.
   - I2S mic = 3 pins (BCLK, WS, DATA).
-  - OLED I2C = 2 pins (SDA, SCL).
   - Voice-mode button = 1 pin. Status LED = 1 pin (optional).
-  - Total ~23 pins.
+  - Total ~21 pins.
 - [ ] Check the DevKitC pinout and **avoid**:
   - GPIO 19/20 (native USB).
   - GPIO 35/36/37 (used by octal PSRAM on N8R8).
@@ -101,7 +98,6 @@ Decide this early and put it in the proposal.
 Starting list (confirm stock + links before ordering):
 - ESP32-S3-DevKitC-1-N8R8 (8MB flash / 8MB PSRAM) - main MCU.
 - INMP441 or Adafruit SPH0645 I2S MEMS mic - voice input.
-- SSD1306 128x64 I2C OLED - display.
 - ~47 mechanical switches (MX-style) + a few spares.
 - Hot-swap: Amoeba King single-key PCBs (hand-wire friendly) **or** Kailh hot-swap sockets + custom PCB.
 - 1N4148 diodes (only if your hot-swap boards don't already include them) - get 100.
@@ -115,7 +111,7 @@ Starting list (confirm stock + links before ordering):
 Steps:
 - [ ] Make a spreadsheet: part, purpose, link, price, qty, status (ordered / arrived / tested).
 - [ ] Order the MCU and mic **first**. They decide whether the ML works.
-- [ ] Order 1-2 spare mics and a spare OLED. They're cheap and fail/break often.
+- [ ] Order 1-2 spare mics. They're cheap and fail/break often.
 - Why: course says order early to leave time to re-order. Shipping delays kill projects.
 
 > **Result:** everything on order, and a parts spreadsheet you can paste into the proposal.
@@ -126,7 +122,7 @@ Steps:
 *Uses Phase 1-2 output.*
 - [ ] Written description of the goal.
 - [ ] Links to every part and resource.
-- [ ] Block diagram: Mic → ESP32-S3 (ML core) → USB HID → Computer; Matrix → ESP32-S3; ESP32-S3 → OLED.
+- [ ] Block diagram: Mic → ESP32-S3 (ML core) → USB HID → Computer; Matrix → ESP32-S3.
 - [ ] "A" feature list (core) + stretch goals.
 - [ ] Hard mid-project deliverable. Suggested: "ESP32-S3 recognizes at least 5 spoken commands on-device and prints them; matrix of a few test keys sends keystrokes over USB."
 - [ ] **Must** discuss in person with instructor/TA, or it's a 0.
@@ -162,15 +158,11 @@ Steps:
 - [ ] Press multiple keys at once. Confirm no ghosting.
 - Why: debug matrix logic on 4 keys, not 47 soldered ones.
 
-### 4.6 OLED test
-- [ ] Display text on SSD1306 over I2C.
-
-### 4.7 Integration
+### 4.6 Integration
 - [ ] Combine all of the above in one firmware using FreeRTOS tasks:
   - Task 1 (core 0): audio capture + speech recognition.
   - Task 2 (core 1): matrix scan + USB HID.
-  - Task 3: OLED updates.
-- [ ] Voice button toggles voice mode. Recognized command → HID shortcut + OLED text.
+- [ ] Voice button toggles voice mode. Recognized command → HID shortcut.
 - Why: proves everything can run at the same time without starving each other.
 
 > **Result:** a working breadboard keyboard-with-voice. This is a great mid-project review deliverable.
@@ -184,7 +176,7 @@ Course expects by this point:
 - [ ] All physical parts in hand (or first pass).
 - [ ] Firmware compiles, flashes, prints output.
 - [ ] Input working (mic + some keys).
-- [ ] Output working (HID + OLED).
+- [ ] Output working (HID).
 - [ ] Online submission + in-person meeting.
 
 Bring: updated block diagram, photos, test results, problems you need help with.
@@ -214,12 +206,11 @@ Bring: updated block diagram, photos, test results, problems you need help with.
   - Space under plate for wiring + hot-swap boards (measure height).
   - ESP32 mount with USB-C cutout aligned to the board's native USB port.
   - Mic opening (small hole + mesh) away from where hands rest, to reduce key noise.
-  - OLED window.
   - Voice-mode button hole.
   - Heat-set insert holes for closing the case.
   - Slight typing angle (optional).
 - [ ] Print a test fit with electronics before the final print.
-- Why: test fits catch wrong USB/OLED alignment before wasting a long print.
+- Why: test fits catch wrong USB alignment before wasting a long print.
 
 > **Result:** printed plate + case that fit the real parts.
 
@@ -233,7 +224,7 @@ Bring: updated block diagram, photos, test results, problems you need help with.
 - [ ] Run rows/columns to the ESP32 pins from your pin map.
 - [ ] Test with a multimeter for shorts and continuity **before** powering on.
 - [ ] Test each key in firmware one by one. Fix cold joints.
-- [ ] Mount mic, OLED, button. Keep mic wires short.
+- [ ] Mount mic and button. Keep mic wires short.
 - Why: careful continuity testing saves hours of "why does this key not work".
 
 > **Result:** fully wired keyboard in the case.
@@ -246,11 +237,7 @@ Bring: updated block diagram, photos, test results, problems you need help with.
 - [ ] Voice mode:
   - Button press = start listening (or hold-to-talk).
   - Command → shortcut lookup table (easy to add commands).
-  - Confirmation on OLED. Timeout back to normal mode.
-- [ ] WPM (on-device processing):
-  - Count characters typed. WPM = (chars / 5) per minute over a rolling window.
-  - Show on OLED in normal mode.
-- [ ] Optional: system-usage screen via a small laptop script over USB serial (clearly marked as host-fed, not on-device processing).
+  - Timeout back to normal mode.
 - [ ] Comment the code as you go.
 
 > **Result:** final firmware with all core features.

@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "267c9c5ef7fb5fc1",
+        "id": "07ff424414603715",
         "type": "tabs",
         "children": [
           {
-            "id": "79d6b96e222e3610",
+            "id": "101ffb66b9a37420",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Project Proposal.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Project Proposal"
+              "title": "New tab"
             }
           }
         ]
@@ -100,7 +96,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Project Proposal.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -119,7 +114,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Project Proposal.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -162,7 +156,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Project Proposal.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -186,13 +179,16 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "79d6b96e222e3610",
+  "active": "101ffb66b9a37420",
   "lastOpenFiles": [
+    "Project Proposal.md",
+    "Excalidraw/Drawing 2026-10-25 23.00.46.excalidraw.md",
+    "Excalidraw",
     "Welcome.md",
-    "keyboard_project_plan.md",
-    "Project Proposal.md"
+    "keyboard_project_plan.md"
   ]
 }
